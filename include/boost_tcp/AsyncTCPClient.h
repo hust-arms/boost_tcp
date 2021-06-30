@@ -27,6 +27,8 @@
 
 #include "MessageProcessBuffer.h"
 
+// #define DEBUG
+
 using namespace boost::asio;
 
 const int BUFFER_MAX_LEN = 1024;
@@ -79,7 +81,9 @@ private:
     {
         if(!ec)
         {
+#ifdef DEBUG
             std::cout << "<AsyncTCPClient>: Connect to " << sock->remote_endpoint().address() << std::endl;
+#endif
             startRead(sock);
             startWrite(sock);
             // if(stopped_)
@@ -88,7 +92,9 @@ private:
         }
         else
         {
+#ifdef DEBUG
             std::cerr << "<AsyncTCPClient>: Error in connect handle " << ec.message() << std::endl;
+#endif
             stop(sock);
         }
     }
@@ -97,7 +103,9 @@ private:
     {
         // read_timer_.expires_from_now(boost::posix_time::seconds(dt_));
         boost::this_thread::sleep(boost::posix_time::milliseconds(dt_ * 1000));
+#ifdef DEBUG
         std::cout << "<AsyncTCPClient>: Recv message" << std::endl;
+#endif
         sock->async_read_some(buffer(buffer_, BUFFER_MAX_LEN), boost::bind(&this_t::readHandle, this, 
                                                                            placeholders::error, placeholders::bytes_transferred, sock));
     }
@@ -109,13 +117,17 @@ private:
     {
         if(ec)
         {
+#ifdef DEBUG
             std::cout << "<AsyncTCPClient>: Stop client in reading: " << ec.message() << std::endl;
+#endif
             sock->close();
             stopped_ = true;
         }
         else
         {
+#ifdef DEBUG
             std::cout << "<AsyncTCPClient>: Parse recv message" << std::endl;
+#endif
             recv_process_buffer_->parse(buffer_, bytes);
         }
     }
@@ -124,9 +136,10 @@ private:
     {
         // write_timer_.expires_from_now(boost::posix_time::seconds(dt_));
         boost::this_thread::sleep(boost::posix_time::milliseconds(dt_ * 1000));
+#ifdef DEBUG
         std::cout << "<AsyncTCPClient>: Writing" << std::endl;
-        
         std::cout << "<AsyncTCPClient>: Get send message" << std::endl;
+#endif
 
         uint8_t temp_buffer[BUFFER_MAX_LEN];
         size_t len = send_process_buffer_->getMessage(temp_buffer);
@@ -142,7 +155,9 @@ private:
     {
         if(ec)
         {
+#ifdef DEBUG
             std::cout << "<AsyncTCPClient>: stop client in writing: " << ec.message() << std::endl;
+#endif
             sock->close();
             stopped_ = true;
         }

@@ -27,6 +27,7 @@
 
 using namespace boost::asio;
 
+// #define DEBUG
 
 const int BUFFER_MAX_LEN = 1024;
 
@@ -88,14 +89,18 @@ private:
     {
         if(!ec)
         {
+#ifdef DEBUG
             std::cout << "<AsyncTCPServer>: Accept client: " << sock->remote_endpoint().address() << std::endl;
+#endif
             startWrite(sock);
             startRead(sock);
             accept();
         }
         else
         {
+#ifdef DEBUG
             std::cerr << "<AsyncTCPServer>: Error in accept handle: " << ec.message() << std::endl;
+#endif
         }
     }
 
@@ -115,8 +120,10 @@ private:
      */
     void write(pSocket_t sock)
     {
-        std::cout << "<AsyncTCPServer>: Write: " << std::endl;
+#ifdef DEBUG
+        std::cout << "<AsyncTCPServer>: Write" << std::endl;
         std::cout << "<AsyncTCPServer>: Get send message" << std::endl;
+#endif
         uint8_t temp_buffer[BUFFER_MAX_LEN];
         size_t len = send_buffer_->getMessage(temp_buffer);
         sock->async_write_some(buffer(temp_buffer, len), boost::bind(&this_t::writeHandle, this, 
@@ -139,7 +146,9 @@ private:
      */
     void read(pSocket_t sock)
     {
-        std::cout << "<AsyncTCPServer>: Read: " << std::endl;
+#ifdef DEBUG
+        std::cout << "<AsyncTCPServer>: Read" << std::endl;
+#endif
         sock->async_read_some(buffer(buffer_, BUFFER_MAX_LEN), boost::bind(&this_t::readHandle, this, 
                                                                            placeholders::error, placeholders::bytes_transferred, sock));
     }
@@ -151,7 +160,9 @@ private:
     {
         if(ec)
         {
+#ifdef DEBUG
             std::cout << "<AsyncTCPServer>: stop server in reading: " << ec.message() << std::endl;
+#endif
             stop(sock);
         }
         else
@@ -168,7 +179,9 @@ private:
     {
         if(ec)
         {
+#ifdef DEBUG
             std::cout << "<AsyncTCPServer>: stop server in writing: " << ec.message() << std::endl;
+#endif
             stop(sock);
             return;
         }
