@@ -126,6 +126,14 @@ private:
 #endif
         uint8_t temp_buffer[BUFFER_MAX_LEN];
         size_t len = send_buffer_->getMessage(temp_buffer);
+
+        // std::cout << "<AsyncTCPServer>: Writein: ";
+        // for(int i = 0; i < len; ++i)
+        // {
+        //     printf("0x%x ", temp_buffer[i]);
+        // }
+        // printf("\n");
+
         sock->async_write_some(buffer(temp_buffer, len), boost::bind(&this_t::writeHandle, this, 
                                                             placeholders::error, sock));
     }
@@ -167,7 +175,9 @@ private:
         }
         else
         {
+#ifdef DEBUG
             std::cout << "<AsyncTCPServer>: Process received message" << std::endl;
+#endif
             recv_buffer_->parse(buffer_, bytes_transferred);
         }
     }
