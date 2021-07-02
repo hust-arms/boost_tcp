@@ -53,7 +53,7 @@ public:
      * @rbuffer Message receive process buffer
      * @wbuffer Message send process buffer
      */
-    AsyncTCPClient(std::string ip, int port, double dt, MessageProcessBufferPtr rbuffer, MessageProcessBufferPtr wbuffer);
+    AsyncTCPClient(io_service& io_service, std::string ip, int port, double dt, MessageProcessBufferPtr rbuffer, MessageProcessBufferPtr wbuffer);
 
     ~AsyncTCPClient() {}
 
@@ -171,7 +171,7 @@ private:
         stopped_ = true;
     }
 
-    io_service io_service_;
+    io_service& io_service_;
     endpoint_t endpoint_;
 
     uint8_t buffer_[BUFFER_MAX_LEN];

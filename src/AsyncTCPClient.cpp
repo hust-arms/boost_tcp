@@ -3,9 +3,9 @@
 namespace boost_tcp
 {
 
-AsyncTCPClient::AsyncTCPClient(std::string ip, int port, double dt, 
+AsyncTCPClient::AsyncTCPClient(io_service& io_service, std::string ip, int port, double dt, 
                                MessageProcessBufferPtr rbuffer, MessageProcessBufferPtr wbuffer)
-    : endpoint_(address_t::from_string(ip), port), dt_(dt), 
+    : io_service_(io_service), endpoint_(address_t::from_string(ip), port), dt_(dt), 
     read_timer_(io_service_), write_timer_(io_service_), deadline_(io_service_),
     recv_process_buffer_(rbuffer), send_process_buffer_(wbuffer), stopped_(false)
 {
