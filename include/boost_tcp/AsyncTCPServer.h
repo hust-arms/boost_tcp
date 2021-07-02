@@ -179,6 +179,7 @@ private:
             std::cout << "<AsyncTCPServer>: Process received message" << std::endl;
 #endif
             recv_buffer_->parse(buffer_, bytes_transferred);
+            startRead(sock);
         }
     }
 
@@ -195,6 +196,7 @@ private:
             stop(sock);
             return;
         }
+        startWrite(sock);
     }
 
     void stop(pSocket_t sock)
