@@ -12,8 +12,8 @@
 namespace boost_tcp
 {
 /////////////////////////////////////////////////////
-AsyncTCPServer::AsyncTCPServer(int port, double dt, MessageProcessBufferPtr recv_buffer, MessageProcessBufferPtr send_buffer):
-    acceptor_(io_service_, endpoint_t(ip::tcp::v4(), port)), recv_buffer_(recv_buffer), send_buffer_(send_buffer), 
+AsyncTCPServer::AsyncTCPServer(io_service& io_service, int port, double dt, MessageProcessBufferPtr recv_buffer, MessageProcessBufferPtr send_buffer):
+    io_service_(io_service), acceptor_(io_service_, endpoint_t(ip::tcp::v4(), port)), recv_buffer_(recv_buffer), send_buffer_(send_buffer), 
     read_timer_(io_service_), write_timer_(io_service_), dt_(dt), stopped_(false)
 {
     acceptor_.set_option(ip::tcp::acceptor::reuse_address(true));

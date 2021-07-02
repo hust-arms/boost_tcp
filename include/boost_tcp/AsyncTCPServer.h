@@ -27,7 +27,7 @@
 
 using namespace boost::asio;
 
-// #define DEBUG
+#define DEBUG
 
 const int BUFFER_MAX_LEN = 1024;
 
@@ -54,7 +54,7 @@ public:
      * @param recv_buffer Receive message processing buffer
      * @param send_buffer Send message processing buffer
      */
-    AsyncTCPServer(int port, double dt, MessageProcessBufferPtr recv_buffer, MessageProcessBufferPtr send_buffer);
+    AsyncTCPServer(io_service& io_service, int port, double dt, MessageProcessBufferPtr recv_buffer, MessageProcessBufferPtr send_buffer);
 
     /**
      * @brief Deconstrutor
@@ -207,7 +207,7 @@ private:
 
     uint8_t buffer_[BUFFER_MAX_LEN];
 
-    io_service io_service_;
+    io_service& io_service_;
     acceptor_t acceptor_;
 
     deadline_timer read_timer_;
